@@ -33,7 +33,51 @@ def Q2(day):
 	day_avg_tip = day_tip_avg / day_bill_avg
 	print("Average " + day + " tip as a percentage of meal cost: " + str(round(day_avg_tip * 100, 2)) + "%")
 
-Q2("Sun")
-Q2("Sat")
-Q2("Thur")
-Q2("Fri")
+days = ["Thur", "Fri", "Sat", "Sun"]
+for day in days:
+	Q2(day)
+
+
+print("\n")
+# Question 3 ========================================================================================
+print("Question 3:")
+def AddTipPercs(row):
+	return row['tip'] / row['total_bill']
+
+df['tip_perc'] = df.apply(AddTipPercs, axis=1)
+
+highest_num = 0
+for day in days:
+	cur_mean = df['tip_perc'][(df['time'] == "Lunch") & (df['day'] == day)].mean()
+	if cur_mean > highest_num:
+		highest_num = cur_mean
+		highest_name = ["lunch", day]
+	cur_mean = df['tip_perc'][(df['time'] == "Dinner") & (df['day'] == day)].mean()
+	if cur_mean > highest_num:
+		highest_num = cur_mean
+		highest_name = ["dinner", day]
+
+print("Highest tips: \nTime: " + highest_name[0] + "\nDay: " + highest_name[1] + "\nAverage tip: "
+	+ str(round(highest_num * 100, 2)) + "%")
+
+
+
+print("\n")
+# Question 4 ========================================================================================
+print("Question 4:")
+df_corr = df.corr()
+print("Correlation between tips and meal prices: " + str(round(df_corr['tip'].iloc[0], 5)) )
+
+
+print("\n")
+# Question 5 ========================================================================================
+print("Question 5:")
+print("The correlation between tips and size of group is " + str(round(df_corr['size'].iloc[1], 5))
+	+ ". This is slightly less related to one another than tips and meal prices.")
+
+
+print("\n")
+# Question 6 ========================================================================================
+print("Question 6:")
+
+
