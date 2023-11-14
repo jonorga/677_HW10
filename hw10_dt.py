@@ -42,6 +42,51 @@ cm = pd.crosstab(y_actu, y_pred)
 print(cm)
 
 
+print("\n")
+# Question 3 ========================================================================================
+print("Question 3:")
+
+TP = cm['Green'].iloc[0]
+TN = cm['Red'].iloc[1]
+FP = cm['Green'].iloc[1]
+FN = cm['Red'].iloc[0]
+
+TPR = round((TP / (TP + FN) * 100), 2)
+TNR = round((TN / (TN + FP) * 100), 2)
+print("Decision tree year 2 true positive rate: " + str(TPR) + "%")
+print("Decision tree year 2 true negative rate: " + str(TNR) + "%")
+
+
+print("\n")
+# Question 4 ========================================================================================
+print("Question 4:")
+
+def BNH(df):
+	y2_start = df['Close'].iloc[50]
+	y2_end = df['Close'].iloc[100]
+	stock = 100 / y2_start
+	return round(stock * y2_end, 2)
+
+
+def DT(df):
+	clf = tree.DecisionTreeClassifier(criterion = 'entropy')
+	X_train = df[['Avg_Return', 'Volatility']][df['Week'] <= 50].values
+	Y_train = df[['Color']][df['Week'] <= 50].values
+	X_test = df[['Avg_Return', 'Volatility']][(df['Week'] > 50) & (df['Week'] <= 100)].values
+	actual = df[['Color']][(df['Week'] > 50) & (df['Week'] <= 100)].values
+	actual = actual.reshape(1, -1)[0]
+
+	clf = clf.fit(X_train, Y_train)
+	predictions = clf.predict(X_test)
+	print(actual)
+	print(predictions)
+
+
+cmg_bnh_bal = BNH(df_cmg)
+spy_bnh_bal = BNH(df_spy)
+DT(df_cmg)
+
+
 
 
 
