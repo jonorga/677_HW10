@@ -78,13 +78,39 @@ def DT(df):
 
 	clf = clf.fit(X_train, Y_train)
 	predictions = clf.predict(X_test)
-	print(actual)
-	print(predictions)
+	i = 0
+	balance = 100
+	file_len = len(actual)
+	while i < file_len:
+		today_stock = balance / df['Close'].iloc[i + 50]
+		tmr_stock = balance / df['Close'].iloc[i + 51]
+		difference = abs(today_stock - tmr_stock)
+		if actual[i] == predictions[i]:
+			balance += difference * df["Close"].iloc[i + 51]
+		else:
+			balance -= difference * df["Close"].iloc[i + 51]
+		i += 1
+	return round(balance, 2)
 
 
 cmg_bnh_bal = BNH(df_cmg)
 spy_bnh_bal = BNH(df_spy)
-DT(df_cmg)
+cmg_dt_bal = DT(df_cmg)
+spy_dt_bal = DT(df_spy)
+
+if cmg_bnh_bal > cmg_dt_bal:
+	cmg_result = "better"
+else:
+	cmg_result = "worse"
+if spy_bnh_bal > spy_dt_bal:
+	spy_result = "better"
+else:
+	spy_result = "worse"
+
+print("For year 2 of the Chipotle stock, buy-and-hold ($" + str(cmg_bnh_bal) + ") was " 
+	+ cmg_result + " than the decision tree classifier strategy ($" + str(cmg_dt_bal) + ")")
+print("For year 2 of the S&P-500 stock, buy-and-hold ($" + str(spy_bnh_bal) + ") was " 
+	+ spy_result + " than the decision tree classifier strategy ($" + str(spy_dt_bal) + ")")
 
 
 
