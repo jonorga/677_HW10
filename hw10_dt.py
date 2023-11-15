@@ -32,9 +32,9 @@ print("Decision tree year 2 confusion matrix:")
 
 y2_cmg_prediction = clf_c.predict(X_test_c)
 
-# print(y2_cmg_prediction, Y_test_c)
 
-
+print(Y_test_c)
+print(y2_cmg_prediction)
 y_actu = pd.Series(Y_test_c.reshape(1, -1)[0], name='Actual')
 y_pred = pd.Series(y2_cmg_prediction, name='Predicted')
 
