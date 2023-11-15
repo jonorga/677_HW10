@@ -67,6 +67,45 @@ print("\n")
 # Question 2 ========================================================================================
 print("Question 2:")
 best_dt = acc_dfs[0].nlargest(1, 'Accuracy')
+best_nb = acc_dfs[2].nlargest(1, 'Accuracy')
+best_lr = acc_dfs[4].nlargest(1, 'Accuracy')
+print("For learning rate 0.5...")
+print("Decision tree n* =", best_dt['n'].iloc[0])
+print("Naive bayesian n* =", best_nb['n'].iloc[0])
+print("Logistic regression n* =", best_lr['n'].iloc[0])
+
+
+print("\n")
+# Question 3 ========================================================================================
+print("Question 3:")
+print("For learning rate 0.5...")
+print("Decision tree accuracy =", best_dt['Accuracy'].iloc[0])
+print("Naive bayesian accuracy =", best_nb['Accuracy'].iloc[0])
+print("Logistic regression accuracy =", best_lr['Accuracy'].iloc[0])
+
+
+print("\n")
+# Question 4 ========================================================================================
+print("Question 4:")
+
+dt_score = best_dt['Accuracy'].iloc[0]
+nb_score = best_nb['Accuracy'].iloc[0]
+lr_score = best_lr['Accuracy'].iloc[0]
+
+if dt_score > nb_score and dt_score > lr_score:
+	print("The decision tree classifier is the strongest base estimator for my data")
+elif nb_score > dt_score and nb_score > lr_score:
+	print("The naive bayesian classifier is the strongest base estimator for my data")
+else:
+	print("The logistic regression classifier is the strongest base estimator for my data")
+
+
+print("\n")
+# Question 5 ========================================================================================
+print("Question 5:")
+
+
+
 
 
 
