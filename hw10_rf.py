@@ -82,5 +82,61 @@ print("Decision tree year 2 true positive rate: " + str(TPR) + "%")
 print("Decision tree year 2 true negative rate: " + str(TNR) + "%")
 
 
+print("\n")
+# Question 4 ========================================================================================
+print("Question 4:")
+
+def BNH(df):
+	y2_start = df['Close'].iloc[50]
+	y2_end = df['Close'].iloc[100]
+	stock = 100 / y2_start
+	return round(stock * y2_end, 2)
+
+def RF(df):
+	clf = RFC(n_estimators=best_vals['N'].iloc[0], max_depth=best_vals['d'].iloc[0], criterion='entropy')
+	X_train = df[['Avg_Return', 'Volatility']][df['Week'] <= 50].values
+	Y_train = df[['Color']][df['Week'] <= 50].values
+	X_test = df[['Avg_Return', 'Volatility']][(df['Week'] > 50) & (df['Week'] <= 100)].values
+	actual = df[['Color']][(df['Week'] > 50) & (df['Week'] <= 100)].values
+	actual = actual.reshape(1, -1)[0]
+
+	clf = clf.fit(X_train, Y_train.ravel())
+	predictions = clf.predict(X_test)
+	i = 0
+	balance = 100
+	file_len = len(actual)
+	while i < file_len:
+		today_stock = balance / df['Close'].iloc[i + 50]
+		tmr_stock = balance / df['Close'].iloc[i + 51]
+		difference = abs(today_stock - tmr_stock)
+		if actual[i] == predictions[i]:
+			balance += difference * df["Close"].iloc[i + 51]
+		else:
+			balance -= difference * df["Close"].iloc[i + 51]
+		i += 1
+	return round(balance, 2)
+
+
+cmg_bnh_bal = BNH(df_cmg)
+spy_bnh_bal = BNH(df_spy)
+cmg_rf_bal = RF(df_cmg)
+spy_rf_bal = RF(df_spy)
+
+if cmg_bnh_bal > cmg_rf_bal:
+	cmg_result = "better"
+else:
+	cmg_result = "worse"
+if spy_bnh_bal > spy_rf_bal:
+	spy_result = "better"
+else:
+	spy_result = "worse"
+
+print("For year 2 of the Chipotle stock, buy-and-hold ($" + str(cmg_bnh_bal) + ") was " 
+	+ cmg_result + " than the random forest classifier strategy ($" + str(cmg_rf_bal) + ")")
+print("For year 2 of the S&P-500 stock, buy-and-hold ($" + str(spy_bnh_bal) + ") was " 
+	+ spy_result + " than the random forest classifier strategy ($" + str(spy_rf_bal) + ")")
+
+
+
 
 
